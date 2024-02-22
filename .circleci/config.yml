@@ -18,3 +18,5 @@ jobs:
             wget http://localhost:8080
             docker stop docker-gab-container
             docker rm docker-gab-container
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            docker push docker-gab
