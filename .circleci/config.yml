@@ -1,0 +1,37 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: node:14
+
+    working_directory: /usr/src/app
+
+    steps:
+      - checkout
+
+      # Install dependencies
+      - run:
+          name: Install Dependencies
+          command: npm install
+
+      # Build Docker image
+      - run:
+          name: Build Docker Image
+          command: docker build -t docker-gab .
+
+      # Test the Docker container
+      - run:
+          name: Test Docker Container
+          command: docker run -p 3000:3000 -d docker-gab
+
+      # Wait for the application to start (adjust sleep time as needed)
+      - run:
+          name: Wait for Application to Start
+          command: sleep 10
+
+      # Test that the application responds
+      - run:
+          name: Test Application
+          command: curl -s http://localhost:3000
+          when: always
