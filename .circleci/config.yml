@@ -9,14 +9,14 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build -t docker-gab .
+            docker build -t gabrielcompan/docker-gab .
       - run:
           name: Test Docker container
           command: |
-            docker run -d -p 8080:8080 --name docker-gab-container docker-gab
+            docker run -d -p 8080:8080 --name docker-gab-container gabrielcompan/docker-gab
             sleep 5 # Wait for the container to start
             wget http://localhost:8080
             docker stop docker-gab-container
             docker rm docker-gab-container
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-            docker push docker-gab
+            docker push gabrielcompan/docker-gab
