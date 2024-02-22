@@ -2,28 +2,35 @@ version: 2.1
 
 jobs:
   build:
-    docker:
-      - image: node:14
+    machine:
+      image: ubuntu-2004:2023.02.1
 
     working_directory: /usr/src/app
 
     steps:
       - checkout
 
+      # Install Node.js
+      - run:
+          name: Install Node.js
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+
+      # Install npm
+      - run:
+          name: Install npm
+          command: sudo apt-get install -y npm
+
       # Install dependencies
       - run:
           name: Install Dependencies
           command: npm install
 
-      # Build Docker image
+      # Start the application
       - run:
-          name: Build Docker Image
-          command: docker build -t docker-gab .
-
-      # Test the Docker container
-      - run:
-          name: Test Docker Container
-          command: docker run -p 3000:3000 -d docker-gab
+          name: Start Application
+          command: npm start
 
       # Wait for the application to start (adjust sleep time as needed)
       - run:
