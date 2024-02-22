@@ -2,43 +2,19 @@ version: 2.1
 
 jobs:
   build:
-    machine:
-      image: ubuntu-2004:2023.02.1
-
-    working_directory: /usr/src/app
-
+    machine: # executor type
+      image: ubuntu-2004:current
     steps:
       - checkout
-
-      # Install Node.js
       - run:
-          name: Install Node.js
+          name: Build Docker image
           command: |
-            curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-
-      # Install npm
+            docker build -t myapp .
       - run:
-          name: Install npm
-          command: sudo apt-get install -y npm
-
-      # Install dependencies
-      - run:
-          name: Install Dependencies
-          command: npm install
-
-      # Start the application
-      - run:
-          name: Start Application
-          command: npm start
-
-      # Wait for the application to start (adjust sleep time as needed)
-      - run:
-          name: Wait for Application to Start
-          command: sleep 10
-
-      # Test that the application responds
-      - run:
-          name: Test Application
-          command: curl -s http://localhost:8080
-          when: always
+          name: Test Docker container
+          command: |
+            docker run -d -p 8080:8080 --name myapp_container myapp
+            sleep 5 # Wait for the container to start
+            wget http://localhost:8080
+            docker stop myapp_container
+            docker rm myapp_container
