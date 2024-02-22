@@ -33,5 +33,5 @@ jobs:
       # Test that the application responds
       - run:
           name: Test Application
-          command: curl -s http://localhost:3000
+          command: curl -s http://localhost:8080
           when: always
